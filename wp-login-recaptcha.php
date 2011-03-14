@@ -4,7 +4,7 @@ Plugin Name: Login reCAPTCHA
 Plugin URI: http://www.xrvel.com/336/programming/wordpress-login-recaptcha-plugin
 Description: Add reCAPTCHA to login page. <a href="http://wordpress.org/extend/plugins/wp-recaptcha/" target="_blank">WP-reCAPTCHA</a> plugin must be installed first. Why use reCAPTCHA instead of other CAPTCHA? Because reCAPTCHA is a powerful CAPTCHA.
 Author: Xrvel
-Version: 0.1.2
+Version: 0.1.3
 Author URI: http://www.xrvel.com/
 */
 
@@ -33,6 +33,10 @@ global $xrvel_login_recaptcha_error;
 function xrvel_login_recaptcha_install() {
 }
 
+function xrvel_login_recaptcha_add_pages() {
+	add_options_page('Login Recaptcha', 'Login Recaptcha', 8, 'xrvel-login-recaptcha', 'xrvel_login_recaptcha_options');
+}
+
 // Display reCAPTCHA on login form
 if (!function_exists('xrvel_login_recaptcha_form')) {
 	function xrvel_login_recaptcha_form() {
@@ -51,7 +55,14 @@ if (!function_exists('xrvel_login_recaptcha_form')) {
 				}
 			}
 			$use_ssl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on");
-			$x_s .= '<script type="text/javascript">var RecaptchaOptions = { theme : \'white\', tabindex : 30 };</script>';
+			$xrvel_options = get_option('xrvel_login_recaptcha_option');
+			if ($xrvel_options == '') {
+				$xrvel_options = array();
+			}
+			if (!isset($xrvel_options['theme'])) {
+				$xrvel_options['theme'] = 'white';
+			}
+			$x_s .= '<script type="text/javascript">var RecaptchaOptions = { theme : \''.$xrvel_options['theme'].'\', tabindex : 30 };</script>';
 			$x_s .= recaptcha_get_html($recaptcha_opt['pubkey'], $xrvel_login_recaptcha_error, $use_ssl);
 		} else {
 			$x_s .= '<p style="color:#FF0000;font-weight:900"><u>Latest</u> <a href="http://wordpress.org/extend/plugins/wp-recaptcha/" rel="nofollow">reCAPTCHA plugin</a> must be installed and activated first.</p>';
@@ -59,6 +70,50 @@ if (!function_exists('xrvel_login_recaptcha_form')) {
 		$x_s .= '<div style="padding:0.5em">&nbsp;</div>';
 		echo $x_s;
 	}
+}
+
+function xrvel_login_recaptcha_options() {
+	if (!current_user_can('manage_options'))  {
+		wp_die( __('You do not have sufficient permissions to access this page.') );
+	}
+	$xrvel_options = get_option('xrvel_login_recaptcha_option');
+	if ($xrvel_options == '') {
+		$xrvel_options = array();
+	}
+	if (!isset($xrvel_options['theme'])) {
+		$xrvel_options['theme'] = 'white';
+	}
+	if (isset($_POST['go'])) {
+		$xrvel_options['theme'] = $_POST['theme'];
+		update_option('xrvel_login_recaptcha_option', $xrvel_options);
+		_e('<div id="message" class="updated fade"><p>Login reCAPTCHA options have been updated.</p></div>');
+	}
+	$s = '<div class="wrap">';
+		$s .= '<h2>Login reCAPTCHA Options</h2>';
+		$s .= '<div>';
+			$s .= '<form method="post" action="admin.php?page=xrvel-login-recaptcha">';
+			$s .= '<input type="hidden" name="go" value="1" />';
+			$s .= 'reCAPTCHA theme : <select name="theme">';
+
+			$sel = ($xrvel_options['theme'] == 'red') ? ' selected="selected"':'';
+			$s .= '<option value="red"'.$sel.'>Red</option>';
+
+			$sel = ($xrvel_options['theme'] == 'white') ? ' selected="selected"':'';
+			$s .= '<option value="white"'.$sel.'>White</option>';
+
+			$sel = ($xrvel_options['theme'] == 'blackglass') ? ' selected="selected"':'';
+			$s .= '<option value="blackglass"'.$sel.'>Black Glass</option>';
+
+			$sel = ($xrvel_options['theme'] == 'clean') ? ' selected="selected"':'';
+			$s .= '<option value="clean"'.$sel.'>Clean</option>';
+
+			$s .= '</select><br />';
+			$s .= '<div class="submit"><input type="submit" name="submit" value="Update Options" /></div>';
+			$s .= '</form>';
+		$s .= '</div>';
+		$s .= '<div style="margin-top:1em">Developed by <a href="http://www.xrvel.com" target="_blank">Xrvel</a></div>';
+	$s .= '</div>';
+	echo $s;
 }
 
 // reCAPTCHA process
@@ -100,10 +155,17 @@ if (!function_exists('xrvel_login_recaptcha_recaptcha_installed')) {
 	}
 }
 
+function xrvel_login_recaptcha_uninstall() {
+	delete_option('xrvel_login_recaptcha_option');
+}
+
 $plugin = plugin_basename(__FILE__);
 
 if (XRVEL_LOGIN_RECAPTCHA_ENABLED == true) {
 	add_action('login_form','xrvel_login_recaptcha_form');
 	add_action('wp_authenticate', 'xrvel_login_recaptcha_process', 1);
 }
+
+add_action('admin_menu', 'xrvel_login_recaptcha_add_pages');
+register_uninstall_hook(ABSPATH.PLUGINDIR.'/wp-login-recaptcha/wp-login-recaptcha.php', 'xrvel_login_recaptcha_uninstall');
 ?>

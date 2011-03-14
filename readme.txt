@@ -3,8 +3,8 @@ Contributors: Xrvel
 Donate link: http://www.xrvel.com/donate/
 Tags: login, captcha, recaptcha, admin, security
 Requires at least: 2.9
-Tested up to: 3.0.0
-Stable tag: 0.1.2
+Tested up to: 3.1
+Stable tag: 0.1.3
 
 Add reCAPTCHA to your WordPress login form
 
@@ -49,6 +49,9 @@ Refresh your login form, and reCAPTCHA will dissapear on your login form.
 You can login now and fix your reCAPTCHA setting from admin page.
 
 == Changelog ==
+
+= 0.1.3 =
+* Add option to change reCAPTCHA color (theme).
 
 = 0.1.2 =
 * Change `XRVEL_LOGIN_RECAPTCHA_DISABLED` to `XRVEL_LOGIN_RECAPTCHA_ENABLED`
