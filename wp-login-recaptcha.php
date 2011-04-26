@@ -4,7 +4,7 @@ Plugin Name: Login reCAPTCHA
 Plugin URI: http://www.xrvel.com/336/programming/wordpress-login-recaptcha-plugin
 Description: Add reCAPTCHA to login page. <a href="http://wordpress.org/extend/plugins/wp-recaptcha/" target="_blank">WP-reCAPTCHA</a> plugin must be installed first. Why use reCAPTCHA instead of other CAPTCHA? Because reCAPTCHA is a powerful CAPTCHA.
 Author: Xrvel
-Version: 0.1.3
+Version: 0.1.4
 Author URI: http://www.xrvel.com/
 */
 
@@ -40,7 +40,8 @@ function xrvel_login_recaptcha_add_pages() {
 // Display reCAPTCHA on login form
 if (!function_exists('xrvel_login_recaptcha_form')) {
 	function xrvel_login_recaptcha_form() {
-		global $recaptcha_opt, $errors, $xrvel_login_recaptcha_error;
+		global $errors, $xrvel_login_recaptcha_error;
+		$ropt = get_option('recaptcha_options');
 		$login_recaptcha_err = 0;
 		if (isset($_GET['login_recaptcha_err'])) {
 			$login_recaptcha_err = intval($_GET['login_recaptcha_err']);
@@ -63,7 +64,7 @@ if (!function_exists('xrvel_login_recaptcha_form')) {
 				$xrvel_options['theme'] = 'white';
 			}
 			$x_s .= '<script type="text/javascript">var RecaptchaOptions = { theme : \''.$xrvel_options['theme'].'\', tabindex : 30 };</script>';
-			$x_s .= recaptcha_get_html($recaptcha_opt['pubkey'], $xrvel_login_recaptcha_error, $use_ssl);
+			$x_s .= recaptcha_get_html($ropt['public_key'], $xrvel_login_recaptcha_error, $use_ssl);
 		} else {
 			$x_s .= '<p style="color:#FF0000;font-weight:900"><u>Latest</u> <a href="http://wordpress.org/extend/plugins/wp-recaptcha/" rel="nofollow">reCAPTCHA plugin</a> must be installed and activated first.</p>';
 		}
@@ -119,7 +120,9 @@ function xrvel_login_recaptcha_options() {
 // reCAPTCHA process
 if (!function_exists('xrvel_login_recaptcha_process')) {
 	function xrvel_login_recaptcha_process() {
-		global $recaptcha_opt, $errors, $xrvel_login_recaptcha_error;
+		global $errors, $xrvel_login_recaptcha_error;
+		$ropt = get_option('recaptcha_options');
+
 		if (xrvel_login_recaptcha_recaptcha_installed() == false) {
 			return true;
 		}
@@ -132,7 +135,7 @@ if (!function_exists('xrvel_login_recaptcha_process')) {
 			exit();
 		}
 
-		$recaptcha_response = recaptcha_check_answer($recaptcha_opt['privkey'],
+		$recaptcha_response = recaptcha_check_answer($ropt['private_key'],
 			$_SERVER['REMOTE_ADDR'],
 			$_POST['recaptcha_challenge_field'],
 			$_POST['recaptcha_response_field']);
@@ -151,7 +154,7 @@ if (!function_exists('xrvel_login_recaptcha_process')) {
 //
 if (!function_exists('xrvel_login_recaptcha_recaptcha_installed')) {
 	function xrvel_login_recaptcha_recaptcha_installed() {
-		return (defined('RECAPTCHA_WP_HASH_SALT') && function_exists('display_recaptcha'));
+		return (defined('RECAPTCHA_API_SERVER') && defined('RECAPTCHA_API_SECURE_SERVER') && defined('RECAPTCHA_VERIFY_SERVER'));
 	}
 }
 
