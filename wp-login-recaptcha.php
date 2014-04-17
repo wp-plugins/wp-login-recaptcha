@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Login reCAPTCHA
-Plugin URI: http://www.xrvel.com/336/programming/wordpress-login-recaptcha-plugin
+Plugin URI: http://www.xrvel.com/
 Description: Add reCAPTCHA to login page. <a href="http://wordpress.org/extend/plugins/wp-recaptcha/" target="_blank">WP-reCAPTCHA</a> plugin must be installed first. Why use reCAPTCHA instead of other CAPTCHA? Because reCAPTCHA is a powerful CAPTCHA.
 Author: Xrvel
 Version: 0.1.4
