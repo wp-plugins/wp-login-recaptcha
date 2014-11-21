@@ -3,8 +3,8 @@ Contributors: Xrvel
 Donate link: http://www.xrvel.com/
 Tags: login, captcha, recaptcha, admin, security
 Requires at least: 2.9
-Tested up to: 3.9
-Stable tag: 0.1.4
+Tested up to: 4.0.1
+Stable tag: 1.0.0
 
 Add reCAPTCHA to your WordPress login form
 
@@ -14,8 +14,8 @@ This plugin simply adds reCAPTCHA to your login form. By adding reCAPTCHA to you
 
 Requirement
 
-* You must have reCAPTCHA account. It is free. You can login on http://www.google.com/recaptcha
-* [WP-reCAPTCHA plugin](http://wordpress.org/extend/plugins/wp-recaptcha/) should be installed first.
+* You must have reCAPTCHA account. It is free. You can login on https://www.google.com/recaptcha
+* [WP-reCAPTCHA plugin](https://wordpress.org/plugins/wp-recaptcha/) should be installed first.
 
 == Installation ==
 
@@ -28,11 +28,7 @@ The installation process.
 
 = Why should i use reCAPTCHA and not (put_other_captcha_here) ? =
 
-Read the answer here :
-http://www.google.com/recaptcha/learnmore
-
-And here :
-http://www.google.com/recaptcha/digitizing
+https://www.google.com/recaptcha/intro/index.html
 
 = What if somehow i entered wrong reCAPTCHA setting (for example wrong Public Key, etc), i can not login to my Wordpress site =
 
@@ -49,6 +45,9 @@ Refresh your login form, and reCAPTCHA will dissapear on your login form.
 You can login now and fix your reCAPTCHA setting from admin page.
 
 == Changelog ==
+
+= 1.0.0 =
+* Update for latest WP ReCAPTCHA plugin update. There is a small interface bug on WP-admin menu, which is the menu link of WP reCAPTCHA will be displayed twice. However everything is working normally on the user side.
 
 = 0.1.4 =
 * Bug fix for latest WP ReCAPTCHA plugin update.
