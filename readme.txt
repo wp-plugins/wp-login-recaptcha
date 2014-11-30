@@ -22,6 +22,9 @@ The installation process.
 
 1. Upload  to the `/wp-content/plugins/` directory. Or directly upload from your Plugin management page.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. On your WP Admin, navigate under "Settings" menu, there is "WP Login reCAPTCHA" sub menu.
+4. Open that "WP Login reCAPTCHA" sub menu.
+5. Fill both public and private reCAPTCHA keys there.
 
 == Frequently Asked Questions ==
 
