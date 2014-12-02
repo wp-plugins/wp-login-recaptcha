@@ -4,7 +4,7 @@ Plugin Name: Login reCAPTCHA
 Plugin URI: http://www.xrvel.com/336/programming/wordpress-login-recaptcha-plugin
 Description: Add reCAPTCHA to login page.
 Author: Xrvel
-Version: 2.0.0
+Version: 2.0.1
 Author URI: http://www.xrvel.com/
 */
 
@@ -171,8 +171,24 @@ if (!function_exists('xrvel_login_recaptcha_open_url')) {
 	}
 }
 
-function xrvel_login_recaptcha_uninstall() {
-	delete_option('xrvel_login_recaptcha_options');
+// Add custom links on plugins page
+if (!function_exists('xrvel_login_recaptcha_plugin_row_meta')) {
+	function xrvel_login_recaptcha_plugin_row_meta($links, $file) {
+		if (strpos($file, basename(__FILE__) ) !== false ) {
+			$new_links = array(
+				'<a href="options-general.php?page=xwplr">Settings</a>'
+			);
+			$links = array_merge($links, $new_links);
+		}
+
+		return $links;
+	}
+}
+
+if (!function_exists('xrvel_login_recaptcha_uninstall')) {
+	function xrvel_login_recaptcha_uninstall() {
+		delete_option('xrvel_login_recaptcha_options');
+	}
 }
 
 $plugin = plugin_basename(__FILE__);
@@ -183,6 +199,7 @@ if (XRVEL_LOGIN_RECAPTCHA_ENABLED == true) {
 }
 
 add_action('admin_menu', 'xrvel_login_recaptcha_add_pages');
+add_filter('plugin_row_meta', 'xrvel_login_recaptcha_plugin_row_meta', 10, 2);
 
 register_uninstall_hook(ABSPATH.PLUGINDIR.'/wp-login-recaptcha/wp-login-recaptcha.php', 'xrvel_login_recaptcha_uninstall');
 ?>
