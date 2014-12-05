@@ -4,7 +4,7 @@ Plugin Name: Login reCAPTCHA
 Plugin URI: http://www.xrvel.com/336/programming/wordpress-login-recaptcha-plugin
 Description: Add reCAPTCHA to login page.
 Author: Xrvel
-Version: 2.0.1
+Version: 2.0.2
 Author URI: http://www.xrvel.com/
 */
 
@@ -55,11 +55,12 @@ if (!function_exists('xrvel_login_recaptcha_form')) {
 
 		$x_s = '';
 		if ('' != $opt['site_key'] && '' != $opt['secret_key']) {
-			$x_s .= '<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-			<div class="g-recaptcha" data-sitekey="'.htmlentities($opt['site_key']).'" data-theme="'.$opt['theme'].'"></div>';
+			$x_s .= '
+			<div class="x_recaptcha_wrapper"><div class="g-recaptcha" data-sitekey="'.htmlentities($opt['site_key']).'" data-theme="'.$opt['theme'].'"></div>';
 			if (1 == $login_recaptcha_err) {
-				$x_s .= '<div style="color:#F00;font-weight:900;padding:0.5em">Please pass reCAPTCHA verification</div>';
+				$x_s .= '<div class="x_recaptcha_error">Please pass reCAPTCHA verification</div>';
 			}
+			$x_s .= '</div>';
 		}
 		echo $x_s;
 	}
@@ -191,9 +192,28 @@ if (!function_exists('xrvel_login_recaptcha_uninstall')) {
 	}
 }
 
+if (!function_exists('xrvel_login_recaptcha_login_enqueue_script')) {
+function xrvel_login_recaptcha_login_enqueue_script() { ?>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style type="text/css">
+        #login {
+            width: 350px !important;
+        }
+		.x_recaptcha_error {
+			color:#F00;
+			font-weight: 900;
+		}
+		.x_recaptcha_wrapper {
+			padding-bottom: 4%;
+		}
+    </style>
+<?php }
+}
+
 $plugin = plugin_basename(__FILE__);
 
 if (XRVEL_LOGIN_RECAPTCHA_ENABLED == true) {
+	add_action('login_enqueue_scripts', 'xrvel_login_recaptcha_login_enqueue_script');
 	add_action('login_form','xrvel_login_recaptcha_form');
 	add_action('wp_authenticate', 'xrvel_login_recaptcha_process', 1);
 }
