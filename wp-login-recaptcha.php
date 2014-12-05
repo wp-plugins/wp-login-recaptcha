@@ -4,7 +4,7 @@ Plugin Name: Login reCAPTCHA
 Plugin URI: http://www.xrvel.com/336/programming/wordpress-login-recaptcha-plugin
 Description: Add reCAPTCHA to login page.
 Author: Xrvel
-Version: 2.0.2
+Version: 2.0.3
 Author URI: http://www.xrvel.com/
 */
 
@@ -27,6 +27,55 @@ Author URI: http://www.xrvel.com/
 // Enable this plugin?
 define('XRVEL_LOGIN_RECAPTCHA_ENABLED', true);
 
+$xrvel_login_recaptcha_languages = array(
+	'ar' => 'Arabic',
+	'bg' => 'Bulgarian',
+	'ca' => 'Catalan',
+	'zh-CN' => 'Chinese (Simplified)',
+	'zh-TW' => 'Chinese (Traditional)',
+	'hr' => 'Croatian',
+	'cs' => 'Czech',
+	'da' => 'Danish',
+	'nl' => 'Dutch',
+	'en-GB' => 'English (UK)',
+	'en' => 'English (US)',
+	'fil' => 'Filipino',
+	'fi' => 'Finnish',
+	'fr' => 'French',
+	'fr-CA' => 'French (Canadian)',
+	'de' => 'German',
+	'de-AT' => 'German (Austria)',
+	'de-CH' => 'German (Switzerland)',
+	'el' => 'Greek',
+	'iw' => 'Hebrew',
+	'hi' => 'Hindi',
+	'hu' => 'Hungarain',
+	'id' => 'Indonesian',
+	'it' => 'Italian',
+	'ja' => 'Japanese',
+	'ko' => 'Korean',
+	'lv' => 'Latvian',
+	'lt' => 'Lithuanian',
+	'no' => 'Norwegian',
+	'fa' => 'Persian',
+	'pl' => 'Polish',
+	'pt' => 'Portuguese',
+	'pt-BR' => 'Portuguese (Brazil)',
+	'pt-PT' => 'Portuguese (Portugal)',
+	'ro' => 'Romanian',
+	'ru' => 'Russian',
+	'sr' => 'Serbian',
+	'sk' => 'Slovak',
+	'sl' => 'Slovenian',
+	'es' => 'Spanish',
+	'es-419' => 'Spanish (Latin America)',
+	'sv' => 'Swedish',
+	'th' => 'Thai',
+	'tr' => 'Turkish',
+	'uk' => 'Ukrainian',
+	'vi' => 'Vietnamese'
+);
+
 if (!function_exists('xrvel_login_recaptcha_add_pages')) {
 	function xrvel_login_recaptcha_add_pages() {
 		add_options_page('WP Login reCAPTCHA', 'WP Login reCAPTCHA', 'manage_options', 'xwplr', 'xrvel_login_recaptcha_page');
@@ -37,7 +86,6 @@ if (!function_exists('xrvel_login_recaptcha_add_pages')) {
 if (!function_exists('xrvel_login_recaptcha_form')) {
 	function xrvel_login_recaptcha_form() {
 		global $recaptcha;
-		$ropt = get_option('recaptcha_options');
 		$login_recaptcha_err = 0;
 
 		if (isset($_GET['login_recaptcha_err'])) {
@@ -84,6 +132,7 @@ if (!function_exists('xrvel_login_recaptcha_get_post')) {
 
 if (!function_exists('xrvel_login_recaptcha_page')) {
 	function xrvel_login_recaptcha_page() {
+		global $xrvel_login_recaptcha_languages;
 		if (!current_user_can('manage_options')) {
 			wp_die( __('You do not have sufficient permissions to access this page.') );
 		}
@@ -92,6 +141,9 @@ if (!function_exists('xrvel_login_recaptcha_page')) {
 			_e('<div id="message" class="updated fade"><p>Options updated.</p></div>');
 		}
 		$opt = get_option('xrvel_login_recaptcha_options');
+		if (!isset($opt['language']) || '' == $opt['language']) {
+			$opt['language'] = 'en';
+		}
 		echo '<div class="wrap">';
 		?>
 		<h2>WP Login reCAPTCHA</h2>
@@ -118,6 +170,16 @@ if (!function_exists('xrvel_login_recaptcha_page')) {
 					<select name="xrvel_login_recaptcha_options[theme]">
 					<option value="light">Light</option>
 					<option value="dark"<?php if ('dark' == $opt['theme']) : ?> selected="selected"<?php endif; ?>>Dark</option>
+					</select>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row">Language</th>
+				<td>
+					<select name="xrvel_login_recaptcha_options[language]">
+					<?php foreach ($xrvel_login_recaptcha_languages as $language_code => $language) : ?>
+					<option value="<?php echo $language_code; ?>" <?php if ($opt['language'] == $language_code) { echo 'selected="selected"'; } ?>><?php echo htmlentities($language); ?></option>
+					<?php endforeach; ?>
 					</select>
 				</td>
 			</tr>
@@ -193,8 +255,13 @@ if (!function_exists('xrvel_login_recaptcha_uninstall')) {
 }
 
 if (!function_exists('xrvel_login_recaptcha_login_enqueue_script')) {
-function xrvel_login_recaptcha_login_enqueue_script() { ?>
-	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+function xrvel_login_recaptcha_login_enqueue_script() {
+	$opt = get_option('xrvel_login_recaptcha_options');
+	if (!isset($opt['language']) || '' == $opt['language']) {
+		$opt['language'] = 'en';
+	}
+	?>
+	<script src="https://www.google.com/recaptcha/api.js?hl=<?php echo $opt['language']; ?>" async defer></script>
     <style type="text/css">
         #login {
             width: 350px !important;
