@@ -11,6 +11,7 @@ Add reCAPTCHA to your WordPress login form
 == Description ==
 
 This plugin simply adds reCAPTCHA to your login form. By adding reCAPTCHA to your login form, you can prevent bot / script from trying to login to your WordPress website.
+
 This plugin only works on default Wordpress login page such as http://www.example.com/wp-login.php
 
 Requirement :
