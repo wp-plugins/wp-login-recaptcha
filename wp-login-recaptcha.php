@@ -2,7 +2,7 @@
 /*
 Plugin Name: Login reCAPTCHA
 Plugin URI: http://www.xrvel.com/336/programming/wordpress-login-recaptcha-plugin
-Description: Add reCAPTCHA to login page.
+Description: Add reCAPTCHA to Wordpress default login page.
 Author: Xrvel
 Version: 2.0.3
 Author URI: http://www.xrvel.com/

@@ -11,8 +11,9 @@ Add reCAPTCHA to your WordPress login form
 == Description ==
 
 This plugin simply adds reCAPTCHA to your login form. By adding reCAPTCHA to your login form, you can prevent bot / script from trying to login to your WordPress website.
+This plugin only works on default Wordpress login page such as http://www.example.com/wp-login.php
 
-Requirement
+Requirement :
 
 * You must have reCAPTCHA account. It is free. You can login on https://www.google.com/recaptcha
 
@@ -24,7 +25,7 @@ The installation process.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. On your WP Admin, navigate under "Settings" menu, there is "WP Login reCAPTCHA" sub menu.
 4. Open that "WP Login reCAPTCHA" sub menu.
-5. Fill both public and private reCAPTCHA keys there.
+5. Fill both public and private reCAPTCHA keys there (REQUIRED).
 
 == Frequently Asked Questions ==
 
