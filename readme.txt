@@ -3,7 +3,7 @@ Contributors: Xrvel
 Donate link: http://www.xrvel.com/
 Tags: login, captcha, recaptcha, admin, security
 Requires at least: 2.9
-Tested up to: 4.0.1
+Tested up to: 4.1
 Stable tag: 2.0.3
 
 Add reCAPTCHA to your WordPress login form
