@@ -4,7 +4,7 @@ Plugin Name: Login reCAPTCHA
 Plugin URI: http://www.xrvel.com/336/programming/wordpress-login-recaptcha-plugin
 Description: Add reCAPTCHA to Wordpress default login page.
 Author: Xrvel
-Version: 2.0.3
+Version: 2.0.4
 Author URI: http://www.xrvel.com/
 */
 
@@ -102,9 +102,9 @@ if (!function_exists('xrvel_login_recaptcha_form')) {
 		}
 
 		$x_s = '';
-		if ('' != $opt['site_key'] && '' != $opt['secret_key']) {
+		if ('' != trim($opt['site_key']) && '' != trim($opt['secret_key'])) {
 			$x_s .= '
-			<div class="x_recaptcha_wrapper"><div class="g-recaptcha" data-sitekey="'.htmlentities($opt['site_key']).'" data-theme="'.$opt['theme'].'"></div>';
+			<div class="x_recaptcha_wrapper"><div class="g-recaptcha" data-sitekey="'.htmlentities(trim($opt['site_key'])).'" data-theme="'.$opt['theme'].'"></div>';
 			if (1 == $login_recaptcha_err) {
 				$x_s .= '<div class="x_recaptcha_error">Please pass reCAPTCHA verification</div>';
 			}
@@ -198,19 +198,22 @@ if (!function_exists('xrvel_login_recaptcha_process')) {
 		}
 
 		$opt = get_option('xrvel_login_recaptcha_options');
-		$parameters = array(
-			'secret' => $opt['secret_key'],
-			'response' => xrvel_login_recaptcha_get_post('g-recaptcha-response'),
-			'remoteip' => xrvel_login_recaptcha_get_ip()
-		);
-		$url = 'https://www.google.com/recaptcha/api/siteverify?' . http_build_query($parameters);
 
-		$response = xrvel_login_recaptcha_open_url($url);
-		$json_response = json_decode($response, true);
+		if ('' != trim($opt['site_key']) && '' != trim($opt['secret_key'])) {
+			$parameters = array(
+				'secret' => trim($opt['secret_key']),
+				'response' => xrvel_login_recaptcha_get_post('g-recaptcha-response'),
+				'remoteip' => xrvel_login_recaptcha_get_ip()
+			);
+			$url = 'https://www.google.com/recaptcha/api/siteverify?' . http_build_query($parameters);
 
-		if (isset($json_response['success']) && true !== $json_response['success']) {
-			header('Location: wp-login.php?login_recaptcha_err=1');
-			exit();
+			$response = xrvel_login_recaptcha_open_url($url);
+			$json_response = json_decode($response, true);
+
+			if (isset($json_response['success']) && true !== $json_response['success']) {
+				header('Location: wp-login.php?login_recaptcha_err=1');
+				exit();
+			}
 		}
 	}
 }

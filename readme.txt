@@ -50,6 +50,9 @@ You can login now and fix your reCAPTCHA setting from admin page.
 
 == Changelog ==
 
+= 2.0.4 =
+* Add additional code to prevent this plugin to be activated if site / secret key is still empty.
+
 = 2.0.3 =
 * Add language option in WP Login reCAPTCHA setting page.
 
